@@ -78,11 +78,9 @@ BEGIN
             created_at timestamp DEFAULT current_timestamp,
             updated_at timestamp DEFAULT current_timestamp
         );
-		CREATE TRIGGER set_updated_at
-    		BEFORE UPDATE 
-			ON timetracking_timesheets
-			FOR EACH ROW
-			EXECUTE FUNCTION set_updated_at();
+        CREATE TRIGGER set_updated_at
+            BEFORE UPDATE ON timetracking_timesheets
+            FOR EACH ROW EXECUTE PROCEDURE set_updated_at();
     END IF;
 END
 $func$ LANGUAGE plpgsql;
@@ -101,9 +99,8 @@ BEGIN
         WHERE c.relname='timetracking_timesheets_ind1'
         AND n.nspname=CURRENT_SCHEMA()
     ) THEN
-        CREATE INDEX IF NOT EXISTS timetracking_timesheets_ind1
-    	ON timetracking_timesheets USING btree
-    	(staff_id ASC NULLS LAST)
+        CREATE INDEX ON timetracking_timesheets USING btree
+    	(staff_id ASC NULLS LAST);
     END IF;
 END
 $func$ LANGUAGE plpgsql;
@@ -123,9 +120,8 @@ BEGIN
         WHERE c.relname='timetracking_timesheets_ind2'
         AND n.nspname=CURRENT_SCHEMA()
     ) THEN
-        CREATE INDEX IF NOT EXISTS timetracking_timesheets_ind2
-    	ON timetracking_timesheets USING btree
-    	("time" ASC NULLS LAST)
+        CREATE INDEX ON timetracking_timesheets USING btree
+    	("time" ASC NULLS LAST);
     END IF;
 END
 $func$ LANGUAGE plpgsql;
